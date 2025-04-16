@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отсчёт до ЕГЭ 2025</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff4d4d;
+            --text: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            background-size: 400% 400%;
+            animation: GradientBackground 15s ease infinite;
+        }
+        
+        @keyframes GradientBackground {
+            0% { background-position: 0% 50% }
+            50% { background-position: 100% 50% }
+            100% { background-position: 0% 50% }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: var(--card-bg);
+            color: var(--text);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+        }
+        
+        .btn-primary:hover {
+            background: #ff6666;
+        }
+        
+        .timezone-selector {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .timezone-btn {
+            background: var(--card-bg);
+            color: var(--text);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timezone-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .timezone-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 1rem;
+            width: 300px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .timezone-dropdown.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .timezone-search {
+            width: 100%;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+        
+        .timezone-group {
+            margin-bottom: 0.5rem;
+        }
+        
+        .timezone-group-title {
+            font-weight: bold;
+            margin: 0.5rem 0;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .timezone-option {
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        
+        .timezone-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .timezone-option.active {
+            background: var(--secondary);
+            font-weight: bold;
+        }
+        
+        .current-timezone {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-top: 1rem;
+            text-align: center;
+        }
+        
+        .current-time {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .countdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .countdown-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 1.5rem;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .countdown-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .subject-name {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .exam-date {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .local-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+        
+        .timer {
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            gap: 0.5rem;
+        }
+        
+        .time-block {
+            flex: 1;
+        }
+        
+        .time-value {
+            font-size: 2rem;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+        
+        .time-label {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+        
+        .days { color: #ffcc00; }
+        .hours { color: #00ccff; }
+        .minutes { color: #ff6666; }
+        .seconds { color: #66ff66; }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: var(--text);
+            opacity: 0.5;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1.2rem;
+            padding: 0.2rem;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+        }
+        
+        .remove-btn:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            border-radius: 15px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text);
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+        }
+        
+        .close-modal:hover {
+            opacity: 1;
+        }
+        
+        .subject-list {
+            display: grid;
+            gap: 0.8rem;
+        }
+        
+        .subject-item {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .subject-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+        
+        .subject-item .date {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem 0;
+            opacity: 0.7;
+        }
+        
+        @media (max-width: 768px) {
+            .countdown-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .timer {
+                flex-wrap: wrap;
+            }
+            
+            .time-block {
+                min-width: calc(50% - 0.5rem);
+            }
+            
+            .timezone-dropdown {
+                width: 100%;
+                left: 0;
+                right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Отсчёт до ЕГЭ 2025</h1>
+            <p class="subtitle">До начала экзаменов осталось:</p>
+            <div class="controls">
+                <button class="btn btn-primary" id="add-subject-btn">
+                    <i class="fas fa-plus"></i> Добавить предмет
+                </button>
+                <button class="btn" id="reset-all-btn">
+                    <i class="fas fa-trash-alt"></i> Сбросить всё
+                </button>
+                <div class="timezone-selector">
+                    <button class="btn timezone-btn" id="timezone-btn">
+                        <i class="fas fa-globe-europe"></i> Часовой пояс
+                    </button>
+                    <div class="timezone-dropdown" id="timezone-dropdown">
+                        <input type="text" class="timezone-search" placeholder="Поиск региона..." id="timezone-search">
+                        <div class="timezone-list" id="timezone-list">
+                            <!-- Часовые пояса будут добавлены через JavaScript -->
+                        </div>
+                        <div class="current-timezone" id="current-timezone">
+                            Текущий: Москва (UTC+3)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <div class="countdown-grid" id="countdown-container">
+            <!-- Таймеры будут добавляться сюда -->
+            <div class="empty-state" id="empty-state">
+                <i class="fas fa-calendar-plus" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <p>Добавьте предметы для отслеживания</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Модальное окно для выбора предметов -->
+    <div class="modal" id="subject-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Выберите предметы</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div class="subject-list" id="subject-list">
+                <!-- Список предметов будет генерироваться JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Все предметы с датами (в UTC+3 - московское время)
+        const allSubjects = {
+            'history': { name: 'История', date: '2025-05-23T10:00:00+03:00' },
+            'literature': { name: 'Литература', date: '2025-05-23T10:00:00+03:00' },
+            'chemistry': { name: 'Химия', date: '2025-05-23T10:00:00+03:00' },
+            'math-basic': { name: 'Математика (база)', date: '2025-05-27T10:00:00+03:00' },
+            'math-profile': { name: 'Математика (профиль)', date: '2025-05-27T10:00:00+03:00' },
+            'russian': { name: 'Русский язык', date: '2025-05-30T10:00:00+03:00' },
+            'social-science': { name: 'Обществознание', date: '2025-06-02T10:00:00+03:00' },
+            'physics': { name: 'Физика', date: '2025-06-02T10:00:00+03:00' },
+            'biology': { name: 'Биология', date: '2025-06-05T10:00:00+03:00' },
+            'geography': { name: 'География', date: '2025-06-05T10:00:00+03:00' },
+            'foreign-lang': { name: 'Иностранные языки (письменно)', date: '2025-06-05T10:00:00+03:00' },
+            'foreign-lang-oral': { name: 'Иностранные языки (устно)', date: '2025-06-10T10:00:00+03:00' },
+            'informatics': { name: 'Информатика', date: '2025-06-11T10:00:00+03:00' }
+        };
+        
+        // Часовые пояса России
+        const timezones = [
+            { name: 'Калининград (UTC+2)', offset: -1 },
+            { name: 'Москва (UTC+3)', offset: 0 },
+            { name: 'Самара (UTC+4)', offset: 1 },
+            { name: 'Екатеринбург (UTC+5)', offset: 2 },
+            { name: 'Омск (UTC+6)', offset: 3 },
+            { name: 'Красноярск (UTC+7)', offset: 4 },
+            { name: 'Иркутск (UTC+8)', offset: 5 },
+            { name: 'Якутск (UTC+9)', offset: 6 },
+            { name: 'Владивосток (UTC+10)', offset: 7 },
+            { name: 'Магадан (UTC+11)', offset: 8 },
+            { name: 'Камчатка (UTC+12)', offset: 9 }
+        ];
+        
+        // Выбранные предметы (по умолчанию)
+        let selectedSubjects = {
+            'math-profile': true,
+            'russian': true,
+            'informatics': true
+        };
+        
+        // Текущий часовой пояс (по умолчанию Москва UTC+3)
+        let currentTimezone = {
+            name: 'Москва (UTC+3)',
+            offset: 0
+        };
+        
+        // Элементы DOM
+        const countdownContainer = document.getElementById('countdown-container');
+        const emptyState = document.getElementById('empty-state');
+        const subjectModal = document.getElementById('subject-modal');
+        const subjectList = document.getElementById('subject-list');
+        const addSubjectBtn = document.getElementById('add-subject-btn');
+        const closeModalBtn = document.getElementById('close-modal');
+        const resetAllBtn = document.getElementById('reset-all-btn');
+        const timezoneBtn = document.getElementById('timezone-btn');
+        const timezoneDropdown = document.getElementById('timezone-dropdown');
+        const timezoneList = document.getElementById('timezone-list');
+        const timezoneSearch = document.getElementById('timezone-search');
+        const currentTimezoneDisplay = document.getElementById('current-timezone');
+        
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSubjectList();
+            renderTimezoneList();
+            renderCountdowns();
+            updateCountdown();
+            updateCurrentTime();
+            setInterval(updateCountdown, 1000);
+            setInterval(updateCurrentTime, 1000);
+            
+            // Загружаем сохранённые настройки
+            loadFromLocalStorage();
+            updateTimezoneDisplay();
+        });
+        
+        // Обработчики событий
+        addSubjectBtn.addEventListener('click', () => {
+            subjectModal.classList.add('active');
+        });
+        
+        closeModalBtn.addEventListener('click', () => {
+            subjectModal.classList.remove('active');
+        });
+        
+        subjectModal.addEventListener('click', (e) => {
+            if (e.target === subjectModal) {
+                subjectModal.classList.remove('active');
+            }
+        });
+        
+        resetAllBtn.addEventListener('click', () => {
+            if (confirm('Вы уверены, что хотите сбросить все выбранные предметы?')) {
+                selectedSubjects = {};
+                saveToLocalStorage();
+                renderCountdowns();
+            }
+        });
+        
+        timezoneBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            timezoneDropdown.classList.toggle('show');
+        });
+        
+        document.addEventListener('click', (e) => {
+            if (!timezoneDropdown.contains(e.target) && e.target !== timezoneBtn) {
+                timezoneDropdown.classList.remove('show');
+            }
+        });
+        
+        timezoneSearch.addEventListener('input', () => {
+            const searchTerm = timezoneSearch.value.toLowerCase();
+            const options = timezoneList.querySelectorAll('.timezone-option');
+            
+            options.forEach(option => {
+                const text = option.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    option.style.display = 'block';
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+        });
+        
+        // Функции
+        function updateCurrentTime() {
+            const now = new Date();
+            // Корректируем время для выбранного часового пояса
+            const utcTime = now.getTime() + (now.getTimezoneOffset() * 60000);
+            const localTime = new Date(utcTime + (3600000 * (3 - currentTimezone.offset)));
+            
+            const timeStr = localTime.toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            const dateStr = localTime.toLocaleDateString('ru-RU', {
+                day: 'numeric',
+                month: 'long',
+                weekday: 'short'
+            });
+            
+            currentTimezoneDisplay.innerHTML = `
+                Текущий: ${currentTimezone.name}<br>
+                <span class="current-time">${dateStr}, ${timeStr}</span>
+            `;
+        }
+        
+        function renderTimezoneList() {
+            timezoneList.innerHTML = '';
+            
+            timezones.forEach(tz => {
+                const option = document.createElement('div');
+                option.className = `timezone-option ${tz.name === currentTimezone.name ? 'active' : ''}`;
+                option.textContent = tz.name;
+                
+                option.addEventListener('click', () => {
+                    currentTimezone = tz;
+                    updateTimezoneDisplay();
+                    timezoneDropdown.classList.remove('show');
+                    saveToLocalStorage();
+                    renderCountdowns();
+                });
+                
+                timezoneList.appendChild(option);
+            });
+        }
+        
+        function updateTimezoneDisplay() {
+            timezoneBtn.innerHTML = `<i class="fas fa-globe-europe"></i> ${currentTimezone.name.split(' ')[0]}`;
+            updateCurrentTime();
+        }
+        
+        function renderSubjectList() {
+            subjectList.innerHTML = '';
+            
+            for (const [id, subject] of Object.entries(allSubjects)) {
+                const date = new Date(subject.date);
+                const dateStr = date.toLocaleDateString('ru-RU', { 
+                    day: 'numeric', 
+                    month: 'long',
+                    weekday: 'short'
+                });
+                
+                const subjectItem = document.createElement('div');
+                subjectItem.className = `subject-item ${selectedSubjects[id] ? 'selected' : ''}`;
+                subjectItem.innerHTML = `
+                    <div>
+                        <strong>${subject.name}</strong>
+                        <div class="date">${dateStr}, 10:00 МСК</div>
+                    </div>
+                    <i class="fas ${selectedSubjects[id] ? 'fa-check-circle' : 'fa-circle'}"></i>
+                `;
+                
+                subjectItem.addEventListener('click', () => {
+                    if (selectedSubjects[id]) {
+                        delete selectedSubjects[id];
+                    } else {
+                        selectedSubjects[id] = true;
+                    }
+                    saveToLocalStorage();
+                    renderSubjectList();
+                    renderCountdowns();
+                });
+                
+                subjectList.appendChild(subjectItem);
+            }
+        }
+        
+        function renderCountdowns() {
+            countdownContainer.innerHTML = '';
+            
+            const selectedCount = Object.keys(selectedSubjects).length;
+            
+            if (selectedCount === 0) {
+                emptyState.style.display = 'block';
+                countdownContainer.appendChild(emptyState);
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            for (const id of Object.keys(selectedSubjects)) {
+                if (allSubjects[id]) {
+                    const subject = allSubjects[id];
+                    const date = new Date(subject.date);
+                    
+                    // Время экзамена всегда 10:00 в локальном времени
+                    const localExamTime = new Date(date);
+                    localExamTime.setHours(10 - currentTimezone.offset); // Корректируем только часы
+                    
+                    const dateStr = localExamTime.toLocaleDateString('ru-RU', { 
+                        day: 'numeric', 
+                        month: 'long',
+                        weekday: 'short'
+                    });
+                    
+                    const card = document.createElement('div');
+                    card.className = 'countdown-card';
+                    card.dataset.id = id;
+                    card.innerHTML = `
+                        <button class="remove-btn" data-id="${id}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <div class="card-header">
+                            <div class="subject-name">${subject.name}</div>
+                            <div class="exam-date">${dateStr}, 10:00</div>
+                        </div>
+                        <div class="local-time">
+                            Время начала в вашем регионе: 10:00
+                        </div>
+                        <div class="timer" id="timer-${id}">
+                            <div class="time-block days">
+                                <div class="time-value">00</div>
+                                <div class="time-label">дней</div>
+                            </div>
+                            <div class="time-block hours">
+                                <div class="time-value">00</div>
+                                <div class="time-label">часов</div>
+                            </div>
+                            <div class="time-block minutes">
+                                <div class="time-value">00</div>
+                                <div class="time-label">минут</div>
+                            </div>
+                            <div class="time-block seconds">
+                                <div class="time-value">00</div>
+                                <div class="time-label">секунд</div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    countdownContainer.appendChild(card);
+                }
+            }
+            
+            // Добавляем обработчики для кнопок удаления
+            document.querySelectorAll('.remove-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    delete selectedSubjects[id];
+                    saveToLocalStorage();
+                    renderCountdowns();
+                    renderSubjectList();
+                });
+            });
+        }
+        
+        function updateCountdown() {
+            const now = new Date();
+            
+            for (const id of Object.keys(selectedSubjects)) {
+                if (allSubjects[id]) {
+                    const examDate = new Date(allSubjects[id].date);
+                    
+                    // Корректируем дату экзамена для часового пояса (всегда 10:00 локального времени)
+                    const localExamTime = new Date(examDate);
+                    localExamTime.setHours(10 - currentTimezone.offset, 0, 0, 0);
+                    
+                    const diff = localExamTime - now;
+                    
+                    const timerElement = document.getElementById(`timer-${id}`);
+                    if (!timerElement) continue;
+                    
+                    if (diff <= 0) {
+                        timerElement.innerHTML = `
+                            <div style="text-align: center; width: 100%; color: #ff9999; font-size: 1.2rem;">
+                                Экзамен уже прошёл
+                            </div>
+                        `;
+                        continue;
+                    }
+                    
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    
+                    const daysElement = timerElement.querySelector('.days .time-value');
+                    const hoursElement = timerElement.querySelector('.hours .time-value');
+                    const minutesElement = timerElement.querySelector('.minutes .time-value');
+                    const secondsElement = timerElement.querySelector('.seconds .time-value');
+                    
+                    if (daysElement) daysElement.textContent = days;
+                    if (hoursElement) hoursElement.textContent = hours.toString().padStart(2, '0');
+                    if (minutesElement) minutesElement.textContent = minutes.toString().padStart(2, '0');
+                    if (secondsElement) secondsElement.textContent = seconds.toString().padStart(2, '0');
+                }
+            }
+        }
+        
+        function saveToLocalStorage() {
+            localStorage.setItem('ege-countdown-selected', JSON.stringify(selectedSubjects));
+            localStorage.setItem('ege-countdown-timezone', JSON.stringify(currentTimezone));
+        }
+        
+        function loadFromLocalStorage() {
+            const savedSubjects = localStorage.getItem('ege-countdown-selected');
+            if (savedSubjects) {
+                selectedSubjects = JSON.parse(savedSubjects);
+            }
+            
+            const savedTimezone = localStorage.getItem('ege-countdown-timezone');
+            if (savedTimezone) {
+                currentTimezone = JSON.parse(savedTimezone);
+            }
+        }
+    </script>
+</body>
+</html>
